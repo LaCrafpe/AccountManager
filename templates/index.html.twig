@@ -1,3 +1,40 @@
-{% block header %}My cool blog posts{% endblock %}
+{% extends 'base.html.twig' %}
 
-{% block body %}<h1>Your lucky number is {{ number }}</h1>{% endblock %}
+{% block body %}
+    <div class="jumbotron jumbotron-fluid bg-white border border-info text-center">
+        <div class="container">
+            <h1 class="display-4">COMPTES</h1>
+            <p class="lead">Gestion des comptes et prévisions financières</p>
+        </div>
+    </div>
+    <div class="row col-4 pull-right">
+        <select class="custom-select col-6 mb-3">
+            <option value="1">Annuel</option>
+            <option value="2">Mensuel</option>
+        </select>
+        <select class="custom-select col-6 mb-3">
+            <option value="1">2018</option>
+            <option value="2">2017</option>
+            <option value="3">2016</option>
+        </select>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                method: "GET",
+                url: "chart",
+                data: {
+                    type: "yearly",
+                    value: "2018"
+                }
+            })
+            .done(function( msg ) {
+                alert( "Data Saved: " + msg );
+            });
+        });
+    </script>
+{% endblock %}
+

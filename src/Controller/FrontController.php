@@ -29,4 +29,13 @@ class FrontController extends AbstractController
         ]);
     }
 
+    /**
+     * @return Response
+     * @Route("/playground")
+     */
+    public function playground()
+    {
+        return $this->render('base.html.twig');
+    }
+
 }

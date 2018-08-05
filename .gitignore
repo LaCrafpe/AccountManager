@@ -14,3 +14,10 @@
 ###> symfony/web-server-bundle ###
 /.web-server-pid
 ###< symfony/web-server-bundle ###
+
+###> PHPStorm project files ###
+.idea
+###< symfony/phpunit-bridge ###
+
+*.lock
+
