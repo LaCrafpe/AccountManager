@@ -21,20 +21,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        $(document).ready(function () {
-            $.ajax({
-                method: "GET",
-                url: "chart",
-                data: {
-                    type: "yearly",
-                    value: "2018"
-                }
-            })
-            .done(function( msg ) {
-                alert( "Data Saved: " + msg );
-            });
-        });
-    </script>
+    <script src="{{ asset('build/app.js') }}"></script>
 {% endblock %}
-
