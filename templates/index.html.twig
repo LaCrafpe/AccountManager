@@ -18,8 +18,21 @@
             <option value="3">2016</option>
         </select>
     </div>
+    <canvas id="myChart" class="col-12" height="400"></canvas>
+    <table id="statement-table" class="table">
+        <thead class="bg-info">
+        <tr>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Montant</th>
+            <th scope="col">Moyenne</th>
+            <th scope="col">Différence</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/app.js') }}"></script>
+    <script src="{{ asset('build/index.js') }}"></script>
 {% endblock %}

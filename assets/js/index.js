@@ -4,8 +4,72 @@
 var $ = require('jquery');
 var Chart = require('chart.js');
 
+
+function drawChart (response)
+{
+    new Chart($("#myChart"), {
+        type: 'line',
+        data: {
+            labels: response.labels,
+            datasets: [
+                {
+                    label: 'Solde',
+                    data: response.solde,
+                    lineTension: 0,
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    fill: false
+                },
+                {
+                    label: 'Dépenses',
+                    data: response.depenses,
+                    lineTension: 0,
+                    borderColor: 'rgba(220, 53, 69, 1)',
+                    fill: false
+                },
+                {
+                    label: 'Revenus',
+                    data: response.revenus,
+                    lineTension: 0,
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function drawTable(response)
+{
+    var percent = new Intl.NumberFormat("fr-FR", {style: "percent"});
+    var table = $('#statement-table');
+    var body = '';
+    $.each(response, function(key, element) {
+        var differentialRaw = element['yearly'] - element['average'];
+        var differentialPercent = differentialRaw / Math.abs(element['average']);
+        var bgClass = (element['type'] != 'income') ? 'bg-danger' : 'bg-success';
+        body += '<tr class="' +bgClass+ '">' +
+            '<td>' + key + '</td>';
+        body += '<td>' + Math.abs(element['yearly']) + '</td>';
+        body += '<td>' + Math.abs(element['average']) + '</td>';
+        body += '<td>' + differentialRaw + ' (' + percent.format(differentialPercent) + ')</td>';
+        body += "</tr>";
+    })
+
+    table.find('tbody').html(body);
+}
+
 $(document).ready(function() {
-    var request = $.ajax({
+    var chartRequest = $.ajax({
         url: "accounting/chart",
         method: "GET",
         data: {
@@ -14,45 +78,21 @@ $(document).ready(function() {
         },
         dataType: "json"
     }).done(function( response ) {
-        new Chart($("#myChart"), {
-            type: 'line',
-            data: {
-                labels: response.labels,
-                datasets: [
-                    {
-                        label: 'Solde',
-                        data: response.solde,
-                        lineTension: 0,
-                        borderColor: 'rgba(255, 193, 7, 1)',
-                        fill: false
-                    },
-                    {
-                        label: 'Dépenses',
-                        data: response.depenses,
-                        lineTension: 0,
-                        borderColor: 'rgba(220, 53, 69, 1)',
-                        fill: false
-                    },
-                    {
-                        label: 'Revenus',
-                        data: response.revenus,
-                        lineTension: 0,
-                        borderColor: 'rgba(40, 167, 69, 1)',
-                        fill: false
-                    }
-                ]
-            },
-            options: {
-                responsive: false,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
+        drawChart(response);
+    }).fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+    });
+
+    $.ajax({
+        url: "accounting/table",
+        method: "GET",
+        data: {
+            type : 'yearly',
+            value : '2018'
+        },
+        dataType: "json"
+    }).done(function( response ) {
+        drawTable(response);
     }).fail(function( jqXHR, textStatus ) {
         alert( "Request failed: " + textStatus );
     });
